@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="Database\" />
+    <Folder Include="Pages\Admin\RolePermissions\" />
   </ItemGroup>
 
 </Project>
