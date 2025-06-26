@@ -214,7 +214,7 @@ namespace AccountManagemetSystem.Services
             {
                 return new ApiResponse
                 {
-                    Success = reader.GetBoolean("Success"),
+                    Success = reader.GetInt32("Success") == 1 ? true : false,
                     Message = reader.GetString("Message")
                 };
             }

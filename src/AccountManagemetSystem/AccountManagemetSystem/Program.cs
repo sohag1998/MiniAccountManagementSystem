@@ -1,4 +1,6 @@
 using AccountManagemetSystem.Data;
+using AccountManagemetSystem.Extensions;
+using AccountManagemetSystem.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,8 +12,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+// Add Custom Identity with Roles
+builder.Services.AddCustomIdentity(builder.Configuration);
+
+// Add Permission Services
+builder.Services.AddPermissionServices();
+
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
@@ -38,5 +45,22 @@ app.UseAuthorization();
 app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
+
+
+// Initialize default roles and permissions on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var permissionService = services.GetRequiredService<IPermissionService>();
+        await permissionService.InitializeDefaultRolesPermissionsAsync();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while initializing roles and permissions.");
+    }
+}
 
 app.Run();
