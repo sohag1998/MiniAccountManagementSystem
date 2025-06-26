@@ -3,50 +3,183 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AccountManagemetSystem</title>
+    <title>@ViewData["Title"] - AcountManagementSystem</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AccountManagemetSystem.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AcountManagementSystem.styles.css" asp-append-version="true" />
+
+    <style>
+        .sidebar {
+            min-height: calc(100vh - 56px);
+            background: #343a40;
+        }
+
+            .sidebar .nav-link {
+                color: #adb5bd;
+                padding: 0.75rem 1rem;
+            }
+
+                .sidebar .nav-link:hover {
+                    color: #fff;
+                    background-color: #495057;
+                }
+
+                .sidebar .nav-link.active {
+                    color: #fff;
+                    background-color: #007bff;
+                }
+
+        .main-content {
+            min-height: calc(100vh - 56px);
+            background-color: #f8f9fa;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
+
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: 1px solid rgba(0, 0, 0, 0.125);
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">AccountManagemetSystem</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg px-3 navbar-dark bg-primary text-white">
+        <a class="navbar-brand text-white" href="/">
+            <i class="fas fa-calculator"></i> Mini Account System
+        </a>
+
+        <button class="navbar-toggler text-white" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" data-toggle="dropdown">
+                            <i class="fas fa-user"></i> @User.Identity.Name
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/Identity/Account/Manage">
+                                <i class="fas fa-cog"></i> Profile
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <form method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })" class="d-inline">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Identity/Account/Login">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid p-0">
+        <div class="row no-gutters" style="margin-right: 0">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <!-- Sidebar -->
+                <div class="col-md-2 sidebar">
+                    <nav class="nav flex-column pt-3">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+
+                        <!-- User Management Section -->
+                        <div class="nav-item">
+                            <h6 class="nav-link text-uppercase text-muted font-weight-bold">
+                                <small>User Management</small>
+                            </h6>
+                            <a class="nav-link pl-4" href="/Admin/UserManagement">
+                                <i class="fas fa-users"></i> Users & Roles
+                            </a>
+                            <a class="nav-link pl-4" href="/Admin/RolePermissions">
+                                <i class="fas fa-shield-alt"></i> Role Permissions
+                            </a>
+                        </div>
+
+                        <!-- Accounting Section -->
+                        <div class="nav-item">
+                            <h6 class="nav-link text-uppercase text-muted font-weight-bold">
+                                <small>Accounting</small>
+                            </h6>
+                            <a class="nav-link pl-4" href="/Accounts">
+                                <i class="fas fa-sitemap"></i> Chart of Accounts
+                            </a>
+                            <a class="nav-link pl-4" href="/Vouchers">
+                                <i class="fas fa-receipt"></i> Vouchers
+                            </a>
+                        </div>
+
+                        <!-- Reports Section -->
+                        <div class="nav-item">
+                            <h6 class="nav-link text-uppercase text-muted font-weight-bold">
+                                <small>Reports</small>
+                            </h6>
+                            <a class="nav-link pl-4" href="/Reports">
+                                <i class="fas fa-chart-bar"></i> Financial Reports
+                            </a>
+                        </div>
+                    </nav>
                 </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+                <!-- Main Content -->
+                <div class="col-md-10 main-content p-4">
+                    @RenderBody()
+                </div>
+            }
+            else
+            {
+                <!-- Full width for non-authenticated users -->
+                <div class="col-12 main-content p-4">
+                    @RenderBody()
+                </div>
+            }
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - AccountManagemetSystem - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Highlight active nav link
+        $(document).ready(function() {
+            var path = window.location.pathname;
+            $('.sidebar .nav-link').each(function() {
+                var href = $(this).attr('href');
+                if (path.startsWith(href) && href !== '/') {
+                    $(this).addClass('active');
+                }
+            });
+        });
+
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert-dismissible').fadeOut();
+        }, 5000);
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
