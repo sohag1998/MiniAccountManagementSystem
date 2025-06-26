@@ -1,0 +1,51 @@
+﻿@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Role Permissions";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-shield-alt"></i> Role Permissions Management
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+                    {
+                        <div class="alert @(Model.StatusMessage.StartsWith("Success") ? "alert-success" : "alert-danger") alert-dismissible fade show">
+                            @Model.StatusMessage
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                    }
+
+                    <div class="row">
+                        @foreach (var role in Model.Roles)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-user-tag fa-3x text-primary mb-3"></i>
+                                        <h5 class="card-title">@role.Name</h5>
+                                        <p class="card-text text-muted">
+                                            Manage permissions for @role.Name role
+                                        </p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="/Admin/RolePermissions/Edit?roleId=@role.Id" class="btn btn-primary btn-block">
+                                            <i class="fas fa-edit"></i> Edit Permissions
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
