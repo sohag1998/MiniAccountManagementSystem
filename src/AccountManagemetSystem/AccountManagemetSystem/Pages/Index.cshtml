@@ -4,7 +4,120 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="h3 mb-4">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </h1>
+        </div>
+    </div>
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="row">
+            <!-- User Management Card -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card border-primary">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">User Management</h5>
+                        <p class="card-text">Manage users, roles, and permissions</p>
+                        <a href="/Admin/UserManagement" class="btn btn-primary">
+                            <i class="fas fa-arrow-right"></i> Go to Users
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart of Accounts Card -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card border-success">
+                    <div class="card-body text-center">
+                        <i class="fas fa-sitemap fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Chart of Accounts</h5>
+                        <p class="card-text">Manage your account structure</p>
+                        <a href="/Accounts" class="btn btn-success">
+                            <i class="fas fa-arrow-right"></i> Go to Accounts
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Voucher Entry Card -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card border-warning">
+                    <div class="card-body text-center">
+                        <i class="fas fa-receipt fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">Voucher Entry</h5>
+                        <p class="card-text">Create and manage vouchers</p>
+                        <a href="/Vouchers" class="btn btn-warning">
+                            <i class="fas fa-arrow-right"></i> Go to Vouchers
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Card -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card border-info">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-bar fa-3x text-info mb-3"></i>
+                        <h5 class="card-title">Reports</h5>
+                        <p class="card-text">View financial reports</p>
+                        <a href="/Reports" class="btn btn-info">
+                            <i class="fas fa-arrow-right"></i> Go to Reports
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Welcome Message -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Welcome to Mini Account System</h5>
+                        <p class="card-text">
+                            You are logged in as <strong>@User.Identity.Name</strong>.
+                            Use the navigation menu to access different modules based on your assigned permissions.
+                        </p>
+                        <small class="text-muted ">
+                            Your roles:
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <span class="badge bg-danger">Admin</span>
+                            }
+                            @if (User.IsInRole("Accountant"))
+                            {
+                                <span class="badge bg-success">Accountant</span>
+                            }
+                            @if (User.IsInRole("Viewer"))
+                            {
+                                <span class="badge bg-info text-dark">Viewer</span>
+                            }
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Welcome to Mini Account System</h5>
+                        <p class="card-text">Please log in to access the system.</p>
+                        <a href="/Identity/Account/Login" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
